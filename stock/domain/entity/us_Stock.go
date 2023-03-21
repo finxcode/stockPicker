@@ -1,4 +1,4 @@
-package stock
+package entity
 
 import (
 	"github.com/google/uuid"
@@ -15,8 +15,23 @@ type UsStock struct {
 	ShareClassFigi string    `json:"shareClassFigi"`
 	Symbol         string    `json:"symbol"`
 	Symbol2        string    `json:"symbol2"`
-	Type           string    `json:"type"`
+	EquityType     string    `json:"equityType"`
 	CreatedAt      time.Time `json:"createdAt"`
 	UpdatedAt      time.Time `json:"updatedAt"`
 	DeletedAt      time.Time `json:"deletedAt"`
+}
+
+func NewUsStock(currency string, description string, displaySymbol string,
+	figi string, isIn string, shareClassFigi string, symbol string, symbol2 string, equityType string) *UsStock {
+	return &UsStock{
+		Currency:       currency,
+		Description:    description,
+		DisplaySymbol:  displaySymbol,
+		Figi:           figi,
+		IsIn:           isIn,
+		ShareClassFigi: shareClassFigi,
+		Symbol:         symbol,
+		Symbol2:        symbol2,
+		EquityType:     equityType,
+	}
 }

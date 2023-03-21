@@ -1,4 +1,4 @@
-package stock
+package entity
 
 import (
 	"github.com/google/uuid"
@@ -6,6 +6,7 @@ import (
 )
 
 type DailyStockPrice struct {
+	ID                 uint      `json:"ID"`
 	StockId            uuid.UUID `json:"stockId"`
 	Symbol             string    `json:"symbol"`             //symbol
 	Current            float32   `json:"current"`            //current
@@ -13,14 +14,14 @@ type DailyStockPrice struct {
 	High               float32   `json:"high"`               //high
 	Low                float32   `json:"low"`                //low
 	Open               float32   `json:"open"`               //open
-	ChangeStr          float32   `json:"changeStr"`          //changeStr
-	PercentStr         float32   `json:"percentStr"`         //percentStr
+	Change             float32   `json:"change"`             //chg
+	Percent            float32   `json:"percent"`            //percent
 	High52Week         float32   `json:"high52Week"`         //high52w
 	Low52Week          float32   `json:"low52Week"`          //low52w
 	Volume             uint      `json:"volume"`             //volume
 	Amount             float32   `json:"amount"`             //amount
 	MarketCapital      uint      `json:"marketCapital"`      //market_capital
-	TotalShares        uint      `json:"totalShares"`        //total_share
+	TotalShares        uint      `json:"totalShares"`        //total_shares
 	Dividend           float32   `json:"dividend"`           //dividend
 	DividendYield      float32   `json:"dividendYield"`      //dividend_yield
 	EPS                float32   `json:"EPS"`                //eps
@@ -35,6 +36,7 @@ type DailyStockPrice struct {
 	Navps              float32   `json:"navps"`              //navps
 	Pb                 float32   `json:"pb"`                 //pb
 	Psr                float32   `json:"psr"`                //psr
+	TradingDay         string    `json:"tradingDay"`         //timestamp
 	CreatedAt          time.Time `json:"createdAt"`
 	UpdatedAt          time.Time `json:"updatedAt"`
 	DeletedAt          time.Time `json:"deletedAt"`

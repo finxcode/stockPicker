@@ -1,4 +1,4 @@
-package stock
+package entity
 
 type Symbol struct {
 	Currency       string `json:"currency"`
