@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"stockPicker/ext/finnhub/config"
+	"stockPicker/ext/finnhub/fetcher"
 )
 
 func main() {
-	err, c := config.New()
+
+	f := fetcher.NewStockSymbolFetcher()
+	s, err := f.GetUsStockSymbol()
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-
-	fmt.Println(c.FinnHub.Stock)
+	fmt.Println(len(*s))
 }

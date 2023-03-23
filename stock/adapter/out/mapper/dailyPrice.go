@@ -1,11 +1,11 @@
-package entity
+package mapper
 
 import (
 	"github.com/google/uuid"
 	"time"
 )
 
-type DailyStockPrice struct {
+type StockDailyPrice struct {
 	ID                 uint      `json:"ID"`
 	StockId            uuid.UUID `json:"stockId"`
 	Symbol             string    `json:"symbol"`             //symbol
@@ -37,4 +37,7 @@ type DailyStockPrice struct {
 	Pb                 float32   `json:"pb"`                 //pb
 	Psr                float32   `json:"psr"`                //psr
 	TradingDay         string    `json:"tradingDay"`         //timestamp
+	CreatedAt          time.Time `json:"createdAt"`
+	UpdatedAt          time.Time `json:"updatedAt"`
+	DeletedAt          time.Time `json:"deletedAt"`
 }
