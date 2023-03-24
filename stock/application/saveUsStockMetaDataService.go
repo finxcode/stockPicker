@@ -59,6 +59,33 @@ func (u *usStockMetaDataService) getUsStockMetaData() *[]entity.UsStock {
 	return &usCommonStock
 }
 
-func (u *usStockMetaDataService) SaveUsStockMetaData(*[]entity.UsStock) (int, error) {
-	return 0, nil
+func (u *usStockMetaDataService) checkExistInCache(stock *entity.UsStock) bool {
+	return u.checkStockExistInCache.CheckStockExistInCache(stock.Figi)
+}
+
+func (u *usStockMetaDataService) checkExistInDB(stock *entity.UsStock) bool {
+	return u.checkStockExistInDB.CheckStockExistInDB(stock.Figi)
+}
+
+func (u *usStockMetaDataService) SaveUsStockMetaData(stocks *[]entity.UsStock) (int, int) {
+	counterCache := 0
+	counterDB := 0
+
+	for _, stock := range *stocks {
+		if u.checkExistInCache(&stock) {
+			continue
+		} else {
+			if u.saveUsStockMetaDataInCache.SaveUsStockMetaDataInCache(&stock) {
+				counterCache++
+			}
+			if u.checkExistInDB(&stock) {
+				continue
+			} else {
+				if u.SaveUsStockMetaDataInDB.SaveUsStockMetaDataInDB(&stock) {
+					counterDB++
+				}
+			}
+		}
+	}
+	return counterCache, counterDB
 }

@@ -2,7 +2,6 @@ package out
 
 import (
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -16,10 +15,10 @@ func NewCheckStockExistAdapter(db *sqlx.DB) *checkStockExistAdapter {
 	}
 }
 
-func (c *checkStockExistAdapter) CheckStockExistInCache(stockId uuid.UUID) bool {
+func (c *checkStockExistAdapter) CheckStockExistInCache(figi string) bool {
 	return false
 }
 
-func (c *checkStockExistAdapter) CheckStockExistInDB(stockId uuid.UUID) bool {
+func (c *checkStockExistAdapter) CheckStockExistInDB(figi string) bool {
 	return false
 }

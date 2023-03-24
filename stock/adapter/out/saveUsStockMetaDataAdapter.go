@@ -9,10 +9,10 @@ func NewSaveUsStockMetaDataConsoleController() *saveUsStockMetaDataConsoleContro
 	return &saveUsStockMetaDataConsoleController{}
 }
 
-func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInCache(stocks *[]entity.UsStock) (int, error) {
-	return 0, nil
+func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInCache(stock *entity.UsStock) bool {
+	return false
 }
 
-func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInDB(stocks *[]entity.UsStock) (int, error) {
-	return 0, nil
+func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInDB(stock *entity.UsStock) bool {
+	return false
 }
