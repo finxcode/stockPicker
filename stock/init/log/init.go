@@ -5,8 +5,8 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
-	"stockPicker/config"
-	"stockPicker/internal/utils"
+	"stockPicker/stock/init/config"
+	"stockPicker/stock/init/helper"
 	"time"
 )
 
@@ -33,7 +33,7 @@ func New(c *config.Config) *zap.Logger {
 }
 
 func createRootDir(c *config.Config) {
-	if ok, _ := utils.PathExists(c.Log.RootDir); !ok {
+	if ok, _ := helper.PathExists(c.Log.RootDir); !ok {
 		_ = os.Mkdir(c.Log.RootDir, os.ModePerm)
 	}
 }

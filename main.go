@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
-	"stockPicker/config"
 	"stockPicker/global"
-	"stockPicker/internal/db"
-	"stockPicker/internal/log"
+	"stockPicker/stock/init/config"
+	"stockPicker/stock/init/db"
+	"stockPicker/stock/init/log"
 )
 
 func main() {

@@ -5,8 +5,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
-	"stockPicker/config"
 	"stockPicker/global"
+	"stockPicker/stock/init/config"
 )
 
 func InitDb(c *config.Config) error {

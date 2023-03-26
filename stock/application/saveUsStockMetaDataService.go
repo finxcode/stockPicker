@@ -2,11 +2,11 @@ package application
 
 import (
 	"fmt"
-	"stockPicker/config"
 	"stockPicker/stock/application/port/out"
 	"stockPicker/stock/application/port/out/cache"
 	"stockPicker/stock/application/port/out/db"
 	"stockPicker/stock/domain/entity"
+	"stockPicker/stock/init/config"
 )
 
 const (
@@ -67,6 +67,14 @@ func (u *usStockMetaDataService) checkExistInDB(stock *entity.UsStock) bool {
 	return u.checkStockExistInDB.CheckStockExistInDB(stock.Figi)
 }
 
+func (u *usStockMetaDataService) saveToCache(stock *entity.UsStock) bool {
+	return u.saveUsStockMetaDataInCache.SaveUsStockMetaDataInCache(stock)
+}
+
+func (u *usStockMetaDataService) saveToDB(stock *entity.UsStock) bool {
+	return u.SaveUsStockMetaDataInDB.SaveUsStockMetaDataInDB(stock)
+}
+
 func (u *usStockMetaDataService) SaveUsStockMetaData(stocks *[]entity.UsStock) (int, int) {
 	counterCache := 0
 	counterDB := 0
@@ -75,13 +83,13 @@ func (u *usStockMetaDataService) SaveUsStockMetaData(stocks *[]entity.UsStock) (
 		if u.checkExistInCache(&stock) {
 			continue
 		} else {
-			if u.saveUsStockMetaDataInCache.SaveUsStockMetaDataInCache(&stock) {
+			if u.saveToCache(&stock) {
 				counterCache++
 			}
 			if u.checkExistInDB(&stock) {
 				continue
 			} else {
-				if u.SaveUsStockMetaDataInDB.SaveUsStockMetaDataInDB(&stock) {
+				if u.saveToDB(&stock) {
 					counterDB++
 				}
 			}

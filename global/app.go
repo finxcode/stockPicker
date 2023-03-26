@@ -3,7 +3,7 @@ package global
 import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
-	"stockPicker/config"
+	"stockPicker/stock/init/config"
 )
 
 type Application struct {

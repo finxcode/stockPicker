@@ -1,8 +1,14 @@
 package out
 
-import "stockPicker/stock/domain/entity"
+import (
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+	dataEntity "stockPicker/stock/adapter/out/entity"
+	"stockPicker/stock/domain/entity"
+)
 
 type saveUsStockMetaDataConsoleController struct {
+	db *sqlx.DB
 }
 
 func NewSaveUsStockMetaDataConsoleController() *saveUsStockMetaDataConsoleController {
@@ -13,6 +19,11 @@ func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInCache(stock 
 	return false
 }
 
-func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInDB(stock *entity.UsStock) bool {
+func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInDB(domainStock *entity.UsStock) bool {
+	stock := dataEntity.NewUsStockDataEntity(uuid.New(), domainStock.Currency,
+		domainStock.Description, domainStock.DisplaySymbol,
+		domainStock.Figi, domainStock.IsIn, domainStock.Mic,
+		domainStock.ShareClassFigi, domainStock.Symbol, domainStock.Symbol2, domainStock.EquityType)
+	query := ""
 	return false
 }

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type UsStock struct {
+type usStock struct {
 	StockId        uuid.UUID `json:"stockId"`
 	Currency       string    `json:"currency"`
 	Description    string    `json:"description"`
@@ -20,4 +20,20 @@ type UsStock struct {
 	CreatedAt      time.Time `json:"createdAt"`
 	UpdatedAt      time.Time `json:"updatedAt"`
 	DeletedAt      time.Time `json:"deletedAt"`
+}
+
+func NewUsStockDataEntity(stockId uuid.UUID, currency string, description string,
+	displaySymbol string, figi string, isIn string, mic string,
+	shareClassFigi string, symbol string, symbol2 string, equityType string) *usStock {
+	return &usStock{StockId: stockId,
+		Currency:       currency,
+		Description:    description,
+		DisplaySymbol:  displaySymbol,
+		Figi:           figi,
+		IsIn:           isIn,
+		Mic:            mic,
+		ShareClassFigi: shareClassFigi,
+		Symbol:         symbol,
+		Symbol2:        symbol2,
+		EquityType:     equityType}
 }
