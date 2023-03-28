@@ -15,6 +15,7 @@ type Config struct {
 	FinnHub      `mapstructure:"finnHub" json:"finnHub" yaml:"finnHub"`
 	AlphaVantage `mapstructure:"alphaVantage" json:"alphaVantage" yaml:"alphaVantage"`
 	Log          `mapstructure:"log" json:"log" yaml:"log"`
+	Redis        `mapstructure:"redis" json:"redis" yaml:"redis"`
 }
 
 func New() (error, *Config) {

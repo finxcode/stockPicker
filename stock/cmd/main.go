@@ -1,9 +1,56 @@
 package main
 
+import (
+	"go.uber.org/zap"
+	"stockPicker/ext/finnhub/fetcher"
+	"stockPicker/stock/adapter/in"
+	"stockPicker/stock/adapter/out"
+	"stockPicker/stock/application"
+	"stockPicker/stock/global"
+	"stockPicker/stock/init/config"
+	"stockPicker/stock/init/log"
+	"stockPicker/stock/init/mysql"
+	"stockPicker/stock/init/redis"
+)
+
 func main() {
-	//StockSymbolFetcher := fetcher.NewStockSymbolFetcher()
-	//getUsStockMetaDataAdapter := out.NewGetUsStockMetaDataAdapter(StockSymbolFetcher)
-	//usStockMetaDataService := application.NewUsStockSymbolService(global.App.Config, getUsStockMetaDataAdapter)
-	//saveUsStockConsoleController := in.NewSaveUsStockConsoleController(usStockMetaDataService)
-	//saveUsStockConsoleController.SaveUsStockMetaData()
+	err, c := config.New()
+	global.App.Logger = log.New(c)
+	logger := global.App.Logger
+
+	if err != nil {
+		logger.Fatal("mysql connection close failed with error", zap.String("fatal", err.Error()))
+	}
+
+	db, err := mysql.InitDb(c)
+
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			logger.Fatal("mysql connection close failed with error", zap.String("fatal", err.Error()))
+		}
+	}()
+
+	rds, err := redis.InitRedis(c)
+	if err != nil {
+		logger.Fatal("redis initialization failed with error", zap.String("redis fatal error", err.Error()))
+	}
+
+	defer func() {
+		err := rds.Close()
+		if err != nil {
+			logger.Fatal("redis connection close failed with error", zap.String("redis fatal error", err.Error()))
+		}
+
+	}()
+
+	StockSymbolFetcher := fetcher.NewStockSymbolFetcher()
+	getUsStockMetaDataAdapter := out.NewGetUsStockMetaDataAdapter(StockSymbolFetcher)
+	checkStockExistAdapter := out.NewCheckStockExistAdapter(rds, db)
+	saveUsStockMetaDataAdapter := out.NewSaveUsStockMetaDataConsoleController(rds, db)
+	usStockMetaDataService := application.NewUsStockSymbolService(c, getUsStockMetaDataAdapter,
+		checkStockExistAdapter, checkStockExistAdapter, saveUsStockMetaDataAdapter, saveUsStockMetaDataAdapter)
+	saveUsStockConsoleController := in.NewSaveUsStockConsoleController(usStockMetaDataService)
+
+	_ = saveUsStockConsoleController.SaveUsStockMetaData()
 }

@@ -34,3 +34,7 @@ func NewUsStock(currency string, description string, displaySymbol string,
 		EquityType:     equityType,
 	}
 }
+
+func (u *UsStock) SetId() {
+	u.StockId = uuid.New()
+}

@@ -1,15 +1,12 @@
 package global
 
 import (
-	"github.com/jmoiron/sqlx"
+	_ "github.com/go-sql-driver/mysql"
 	"go.uber.org/zap"
-	"stockPicker/stock/init/config"
 )
 
 type Application struct {
 	Logger *zap.Logger
-	Config *config.Config
-	Db     *sqlx.DB
 }
 
 var App = new(Application)

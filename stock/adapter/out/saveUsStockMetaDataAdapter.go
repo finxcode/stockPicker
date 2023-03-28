@@ -1,18 +1,21 @@
 package out
 
 import (
-	"github.com/google/uuid"
+	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
-	dataEntity "stockPicker/stock/adapter/out/entity"
 	"stockPicker/stock/domain/entity"
 )
 
 type saveUsStockMetaDataConsoleController struct {
-	db *sqlx.DB
+	rds *redis.Client
+	db  *sqlx.DB
 }
 
-func NewSaveUsStockMetaDataConsoleController() *saveUsStockMetaDataConsoleController {
-	return &saveUsStockMetaDataConsoleController{}
+func NewSaveUsStockMetaDataConsoleController(rds *redis.Client, db *sqlx.DB) *saveUsStockMetaDataConsoleController {
+	return &saveUsStockMetaDataConsoleController{
+		rds: rds,
+		db:  db,
+	}
 }
 
 func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInCache(stock *entity.UsStock) bool {
@@ -20,10 +23,10 @@ func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInCache(stock 
 }
 
 func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInDB(domainStock *entity.UsStock) bool {
-	stock := dataEntity.NewUsStockDataEntity(uuid.New(), domainStock.Currency,
-		domainStock.Description, domainStock.DisplaySymbol,
-		domainStock.Figi, domainStock.IsIn, domainStock.Mic,
-		domainStock.ShareClassFigi, domainStock.Symbol, domainStock.Symbol2, domainStock.EquityType)
-	query := ""
+	//stock := dataEntity.NewUsStockDataEntity(uuid.New(), domainStock.Currency,
+	//	domainStock.Description, domainStock.DisplaySymbol,
+	//	domainStock.Figi, domainStock.IsIn, domainStock.Mic,
+	//	domainStock.ShareClassFigi, domainStock.Symbol, domainStock.Symbol2, domainStock.EquityType)
+	//query := "INSERT INTO us-stock-meta-data "
 	return false
 }

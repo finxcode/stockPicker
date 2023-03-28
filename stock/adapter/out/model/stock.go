@@ -1,4 +1,4 @@
-package entity
+package model
 
 import (
 	"github.com/google/uuid"
@@ -25,7 +25,8 @@ type usStock struct {
 func NewUsStockDataEntity(stockId uuid.UUID, currency string, description string,
 	displaySymbol string, figi string, isIn string, mic string,
 	shareClassFigi string, symbol string, symbol2 string, equityType string) *usStock {
-	return &usStock{StockId: stockId,
+	return &usStock{
+		StockId:        stockId,
 		Currency:       currency,
 		Description:    description,
 		DisplaySymbol:  displaySymbol,

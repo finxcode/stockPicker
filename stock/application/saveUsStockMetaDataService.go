@@ -50,7 +50,6 @@ func NewUsStockSymbolService(config *config.Config,
 func (u *usStockMetaDataService) getUsStockMetaData() *[]entity.UsStock {
 	var usCommonStock []entity.UsStock
 	stocks := u.getUsStockMetaDataPort.GetUsStockMetaData()
-	fmt.Println(len(*stocks))
 	for _, stock := range *stocks {
 		if (stock.Mic == XNYS || stock.Mic == XNAS || stock.Mic == XASE) && stock.EquityType == Type {
 			usCommonStock = append(usCommonStock, stock)
@@ -75,14 +74,20 @@ func (u *usStockMetaDataService) saveToDB(stock *entity.UsStock) bool {
 	return u.SaveUsStockMetaDataInDB.SaveUsStockMetaDataInDB(stock)
 }
 
-func (u *usStockMetaDataService) SaveUsStockMetaData(stocks *[]entity.UsStock) (int, int) {
+func (u *usStockMetaDataService) SaveUsStockMetaData() (int, int) {
 	counterCache := 0
 	counterDB := 0
+	stocks := u.getUsStockMetaData()
+	counterTest := 0
 
 	for _, stock := range *stocks {
 		if u.checkExistInCache(&stock) {
 			continue
 		} else {
+			counterTest++
+			if counterTest%100 == 0 {
+				fmt.Println("100 stock processed")
+			}
 			if u.saveToCache(&stock) {
 				counterCache++
 			}
@@ -95,5 +100,6 @@ func (u *usStockMetaDataService) SaveUsStockMetaData(stocks *[]entity.UsStock) (
 			}
 		}
 	}
+	fmt.Printf("there are %d records not in the cache\n", counterTest)
 	return counterCache, counterDB
 }

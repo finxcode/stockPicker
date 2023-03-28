@@ -13,5 +13,6 @@ func NewSaveUsStockConsoleController(saveUsStockMetaDataUseCase in.SaveUsStockMe
 }
 
 func (s *saveUsStockConsoleController) SaveUsStockMetaData() error {
+	_, _ = s.saveUsStockMetaDataUseCase.SaveUsStockMetaData()
 	return nil
 }
