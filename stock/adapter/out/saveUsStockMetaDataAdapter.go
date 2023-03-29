@@ -1,9 +1,14 @@
 package out
 
 import (
+	"context"
+	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 	"stockPicker/stock/domain/entity"
+	"stockPicker/stock/global"
+	"time"
 )
 
 type saveUsStockMetaDataConsoleController struct {
@@ -19,8 +24,13 @@ func NewSaveUsStockMetaDataConsoleController(rds *redis.Client, db *sqlx.DB) *sa
 }
 
 func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInCache(stock *entity.UsStock) bool {
-
-	return false
+	cmd := s.rds.Set(context.Background(), stock.Figi, stock.Symbol, time.Hour*24*30)
+	if cmd.Err() != nil {
+		global.App.Logger.Error("redis error", zap.String("redis set key error",
+			fmt.Sprintf("redis set key:%s failed with error:%s", stock.Figi, cmd.Err().Error())))
+		return false
+	}
+	return true
 }
 
 func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInDB(domainStock *entity.UsStock) bool {

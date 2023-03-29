@@ -1,7 +1,6 @@
 package application
 
 import (
-	"fmt"
 	"stockPicker/stock/application/port/out"
 	"stockPicker/stock/application/port/out/cache"
 	"stockPicker/stock/application/port/out/db"
@@ -78,7 +77,6 @@ func (u *usStockMetaDataService) SaveUsStockMetaData() (int, int) {
 	counterCache := 0
 	counterDB := 0
 	stocks := u.getUsStockMetaData()
-	counterTest := 0
 
 	if stocks == nil || len(*stocks) == 0 {
 		return 0, 0
@@ -93,7 +91,6 @@ func (u *usStockMetaDataService) SaveUsStockMetaData() (int, int) {
 					counterCache++
 				}
 			} else {
-				counterTest++
 				if u.saveToDB(&stock) {
 					counterDB++
 				}
@@ -103,6 +100,5 @@ func (u *usStockMetaDataService) SaveUsStockMetaData() (int, int) {
 			}
 		}
 	}
-	fmt.Println(counterTest)
 	return counterCache, counterDB
 }
