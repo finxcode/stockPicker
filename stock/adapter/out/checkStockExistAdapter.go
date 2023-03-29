@@ -24,13 +24,15 @@ func NewCheckStockExistAdapter(rds *redis.Client, db *sqlx.DB) *checkStockExistA
 }
 
 func (c *checkStockExistAdapter) CheckStockExistInCache(figi string) bool {
-	b, err := c.rds.Get(context.Background(), figi).Bool()
-	if err != nil {
+	cmd := c.rds.Get(context.Background(), figi)
+	if cmd.Err() == redis.Nil {
+		return false
+	} else if cmd.Err() != nil {
 		global.App.Logger.Error("redis error", zap.String("redis query error",
-			fmt.Sprintf("query key %s failed with error %s", figi, err.Error())))
+			fmt.Sprintf("query key %s failed with error %s", figi, cmd.Err().Error())))
 		return true
 	}
-	return b
+	return true
 }
 
 func (c *checkStockExistAdapter) CheckStockExistInDB(figi string) bool {
