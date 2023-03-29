@@ -14,7 +14,7 @@ func InitDb(c *config.Config) (*sqlx.DB, error) {
 	password := c.DB.Password
 	host := c.DB.Host
 	port := c.DB.Port
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/database", user, password, host, port)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/equities", user, password, host, port)
 	db, err := sqlx.Open("mysql", dsn)
 	if err != nil {
 		global.App.Logger.Error("connect server failed, err:%v\n", zap.String("connect mysql error", err.Error()))

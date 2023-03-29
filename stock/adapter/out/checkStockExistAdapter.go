@@ -2,6 +2,7 @@ package out
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	_ "github.com/go-sql-driver/mysql"
@@ -38,13 +39,12 @@ func (c *checkStockExistAdapter) CheckStockExistInCache(figi string) bool {
 func (c *checkStockExistAdapter) CheckStockExistInDB(figi string) bool {
 	var stock model.UsStock
 	query := "select * from us_stock_meta_data where figi = ?"
-	if err := c.db.Get(&stock, query, figi); err != nil {
+	if err := c.db.Get(&stock, query, figi); err == sql.ErrNoRows {
+		return false
+	} else if err != nil {
 		global.App.Logger.Error("db error", zap.String("database query error",
 			fmt.Sprintf("query figi：%s failed with error %s", figi, err.Error())))
 		return true
-	}
-	if stock.Figi == "" {
-		return false
 	}
 	return true
 }
