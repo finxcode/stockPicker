@@ -19,6 +19,7 @@ func NewSaveUsStockMetaDataConsoleController(rds *redis.Client, db *sqlx.DB) *sa
 }
 
 func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInCache(stock *entity.UsStock) bool {
+
 	return false
 }
 

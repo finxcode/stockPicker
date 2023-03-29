@@ -1,13 +1,9 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"github.com/spf13/viper"
 )
-
-var ErrConfigFileNotFound = errors.New("config file not found")
-var ErrConfigFileError = errors.New("read in config file error")
 
 type Config struct {
 	App          `mapstructure:"app" json:"app" yaml:"app"`
@@ -22,15 +18,13 @@ func New() (error, *Config) {
 	config := Config{}
 	v := viper.New()
 	v.SetConfigFile("config.yaml")
-	v.SetConfigType("yaml")
-	v.AddConfigPath("etc/web_app")
 	v.AddConfigPath(".")
 
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			return ErrConfigFileNotFound, nil
+			return err, nil
 		} else {
-			return ErrConfigFileError, nil
+			return err, nil
 		}
 	}
 

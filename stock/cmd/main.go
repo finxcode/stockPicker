@@ -1,26 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"go.uber.org/zap"
+	"log"
 	"stockPicker/ext/finnhub/fetcher"
 	"stockPicker/stock/adapter/in"
 	"stockPicker/stock/adapter/out"
 	"stockPicker/stock/application"
 	"stockPicker/stock/global"
 	"stockPicker/stock/init/config"
-	"stockPicker/stock/init/log"
+	logging "stockPicker/stock/init/log"
 	"stockPicker/stock/init/mysql"
 	"stockPicker/stock/init/redis"
 )
 
 func main() {
 	err, c := config.New()
-	global.App.Logger = log.New(c)
-	logger := global.App.Logger
-
 	if err != nil {
-		logger.Fatal("mysql connection close failed with error", zap.String("fatal", err.Error()))
+		log.Fatal(fmt.Sprintf("read in configurations failed with error %s", err.Error()))
 	}
+
+	global.App.Logger = logging.New(c)
+	logger := global.App.Logger
 
 	db, err := mysql.InitDb(c)
 

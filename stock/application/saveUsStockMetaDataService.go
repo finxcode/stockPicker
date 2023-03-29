@@ -80,26 +80,29 @@ func (u *usStockMetaDataService) SaveUsStockMetaData() (int, int) {
 	stocks := u.getUsStockMetaData()
 	counterTest := 0
 
+	if stocks == nil || len(*stocks) == 0 {
+		return 0, 0
+	}
+
 	for _, stock := range *stocks {
 		if u.checkExistInCache(&stock) {
 			continue
 		} else {
-			counterTest++
-			if counterTest%100 == 0 {
-				fmt.Println("100 stock processed")
-			}
-			if u.saveToCache(&stock) {
-				counterCache++
-			}
 			if u.checkExistInDB(&stock) {
-				continue
+				if u.saveToCache(&stock) {
+					counterCache++
+				}
 			} else {
+				counterTest++
 				if u.saveToDB(&stock) {
 					counterDB++
+				}
+				if u.saveToCache(&stock) {
+					counterCache++
 				}
 			}
 		}
 	}
-	fmt.Printf("there are %d records not in the cache\n", counterTest)
+	fmt.Println(counterTest)
 	return counterCache, counterDB
 }

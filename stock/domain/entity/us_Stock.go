@@ -5,17 +5,17 @@ import (
 )
 
 type UsStock struct {
-	StockId        uuid.UUID `json:"stockId"`
-	Currency       string    `json:"currency"`
-	Description    string    `json:"description"`
-	DisplaySymbol  string    `json:"displaySymbol"`
-	Figi           string    `json:"figi"`
-	IsIn           string    `json:"isIn"`
-	Mic            string    `json:"mic"`
-	ShareClassFigi string    `json:"shareClassFigi"`
-	Symbol         string    `json:"symbol"`
-	Symbol2        string    `json:"symbol2"`
-	EquityType     string    `json:"equityType"`
+	StockId        uuid.UUID
+	Currency       string
+	Description    string
+	DisplaySymbol  string
+	Figi           string
+	IsIn           string
+	Mic            string
+	ShareClassFigi string
+	Symbol         string
+	Symbol2        string
+	EquityType     string
 }
 
 func NewUsStock(currency string, description string, displaySymbol string,
