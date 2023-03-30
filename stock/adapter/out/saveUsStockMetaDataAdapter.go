@@ -40,7 +40,7 @@ func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInDB(domainSto
 		domainStock.Description, domainStock.DisplaySymbol,
 		domainStock.Figi, domainStock.IsIn, domainStock.Mic,
 		domainStock.ShareClassFigi, domainStock.Symbol, domainStock.Symbol2, domainStock.EquityType)
-	query := "INSERT INTO us-stock-meta-data (stock_id,currency,description," +
+	query := "INSERT INTO us_stock_meta_data (stock_id,currency,description," +
 		"display_symbol,figi,is_in,mic,share_class_figi,symbol,symbol2,equity_type,created_at) " +
 		"VALUES (:stock_id,:currency,:description,:display_symbol,:figi,:is_in,:mic,:share_class_figi,:symbol,:symbol2,:equity_type,:created_at)"
 	_, err := s.db.NamedExec(query, stock)
