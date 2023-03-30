@@ -36,5 +36,8 @@ func NewUsStockDataEntity(stockId uuid.UUID, currency string, description string
 		ShareClassFigi: shareClassFigi,
 		Symbol:         symbol,
 		Symbol2:        symbol2,
-		EquityType:     equityType}
+		EquityType:     equityType,
+		CreatedAt:      time.Now(),
+	}
+
 }

@@ -18,6 +18,5 @@ CREATE TABLE us_stock_meta_data (
     updated_at timestamp null,
     deleted_at timestamp null,
     primary key(stock_id),
-    index(figi),
-    index(symbol)
-    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+    unique index(figi)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
