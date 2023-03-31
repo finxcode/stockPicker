@@ -7,7 +7,7 @@ import (
 	"stockPicker/ext/finnhub/fetcher"
 	"stockPicker/stock/adapter/in"
 	"stockPicker/stock/adapter/out"
-	"stockPicker/stock/application"
+	"stockPicker/stock/application/service/metadata"
 	"stockPicker/stock/global"
 	"stockPicker/stock/init/config"
 	logging "stockPicker/stock/init/log"
@@ -50,8 +50,11 @@ func main() {
 	getUsStockMetaDataAdapter := out.NewGetUsStockMetaDataAdapter(StockSymbolFetcher)
 	checkStockExistAdapter := out.NewCheckStockExistAdapter(rds, db)
 	saveUsStockMetaDataAdapter := out.NewSaveUsStockMetaDataConsoleController(rds, db)
-	usStockMetaDataService := application.NewUsStockSymbolService(c, getUsStockMetaDataAdapter,
-		checkStockExistAdapter, checkStockExistAdapter, saveUsStockMetaDataAdapter, saveUsStockMetaDataAdapter)
+	getUsStocksAdapter := out.NewGetUsStocksAdapter(rds, db)
+	usStockMetaDataService := metadata.NewUsStockSymbolService(
+		getUsStockMetaDataAdapter, checkStockExistAdapter,
+		checkStockExistAdapter, saveUsStockMetaDataAdapter,
+		saveUsStockMetaDataAdapter, getUsStocksAdapter)
 	saveUsStockConsoleController := in.NewSaveUsStockConsoleController(usStockMetaDataService)
 
 	_ = saveUsStockConsoleController.SaveUsStockMetaData()

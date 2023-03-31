@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/google/uuid"
+	"stockPicker/stock/domain/entity"
 	"time"
 )
 
@@ -40,4 +41,24 @@ func NewUsStockDataEntity(stockId uuid.UUID, currency string, description string
 		CreatedAt:      time.Now(),
 	}
 
+}
+
+func (u *UsStock) GetFigi() string {
+	return u.Figi
+}
+
+func (u *UsStock) StockDataEntityToDomainEntity() *entity.UsStock {
+	return &entity.UsStock{
+		StockId:        u.StockId,
+		Currency:       u.Currency,
+		Description:    u.Description,
+		DisplaySymbol:  u.DisplaySymbol,
+		Figi:           u.Figi,
+		IsIn:           u.IsIn,
+		Mic:            u.Mic,
+		ShareClassFigi: u.ShareClassFigi,
+		Symbol:         u.Symbol,
+		Symbol2:        u.Symbol2,
+		EquityType:     u.EquityType,
+	}
 }

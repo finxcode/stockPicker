@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -16,16 +17,16 @@ type Token struct {
 	Type string
 }
 
-type StockPriceParser struct {
+type StockQuoteParser struct {
 	config *xueQiuConfig.Config
 }
 
-func NewStockPriceParser() *StockPriceParser {
+func NewStockPriceParser() *StockQuoteParser {
 	c, err := xueQiuConfig.New()
 	if err != nil {
 		return nil
 	} else {
-		return &StockPriceParser{
+		return &StockQuoteParser{
 			config: c,
 		}
 	}
@@ -105,51 +106,53 @@ func parseToInt(text *string, tokenName string) int {
 	return number
 }
 
-func getXueQiuStockPageHtml(url string) *string {
+func getXueQiuStockPageHtml(url string) (*string, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.Fatal("can not build request\n")
+		return nil, err
 	}
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal("request error\n")
+		return nil, err
 	}
 
 	defer resp.Body.Close()
 
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
 
 	html := string(b)
-	return &html
+	return &html, nil
 }
 
-func (p *StockPriceParser) ParseStockData(url string) map[string]string {
-	html := getXueQiuStockPageHtml(url)
+func (p *StockQuoteParser) ParseStockData(url string) (map[string]interface{}, error) {
+	html, err := getXueQiuStockPageHtml(url)
+	if err != nil {
+		return make(map[string]interface{}), err
+	}
 
-	res := make(map[string]string)
+	res := make(map[string]interface{})
 	tokens := buildTokens()
 
 	startIndex := strings.Index(*html, "quote: {")
 	endIndex := strings.Index(*html, "quoteTags: [{")
 	if startIndex >= endIndex {
-		return nil
+		return make(map[string]interface{}), errors.New("could not find target text in html body")
 	}
 
 	text := (*html)[startIndex:endIndex]
-	fmt.Println(text)
 	for _, token := range *tokens {
 		if token.Type == "floatQuote" {
-			res[token.Name] = fmt.Sprintf("%v", parseToFloat(&text, token.Name, "\""))
+			res[token.Name] = parseToFloat(&text, token.Name, "\"")
 		} else if token.Type == "float" {
-			res[token.Name] = fmt.Sprintf("%v", parseToFloat(&text, token.Name, ""))
+			res[token.Name] = parseToFloat(&text, token.Name, "")
 		} else if token.Type == "uint" || token.Type == "int" {
-			res[token.Name] = fmt.Sprintf("%v", parseToInt(&text, token.Name))
+			res[token.Name] = parseToInt(&text, token.Name)
 		}
 	}
-	return res
+	return res, nil
 }

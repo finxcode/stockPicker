@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
-	"stockPicker/stock/adapter/out/model"
 	"stockPicker/stock/global"
 )
 
@@ -37,9 +37,9 @@ func (c *checkStockExistAdapter) CheckStockExistInCache(figi string) bool {
 }
 
 func (c *checkStockExistAdapter) CheckStockExistInDB(figi string) bool {
-	var stock model.UsStock
-	query := "select * from us_stock_meta_data where figi = ?"
-	if err := c.db.Get(&stock, query, figi); err == sql.ErrNoRows {
+	var id uuid.UUID
+	query := "select stock_id from us_stock_meta_data where figi = ?"
+	if err := c.db.Get(&id, query, figi); err == sql.ErrNoRows {
 		return false
 	} else if err != nil {
 		global.App.Logger.Error("db error", zap.String("database query error",

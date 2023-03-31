@@ -1,11 +1,10 @@
-package application
+package metadata
 
 import (
 	"stockPicker/stock/application/port/out"
 	"stockPicker/stock/application/port/out/cache"
 	"stockPicker/stock/application/port/out/db"
 	"stockPicker/stock/domain/entity"
-	"stockPicker/stock/init/config"
 )
 
 const (
@@ -16,27 +15,28 @@ const (
 )
 
 type usStockMetaDataService struct {
-	config                     *config.Config
-	getUsStockMetaDataPort     out.GetUsStockMetaDataPort
-	checkStockExistInCache     cache.CheckStockExistRepository
-	checkStockExistInDB        db.CheckStockExistRepository
-	saveUsStockMetaDataInCache cache.SaveUsStockMetaDataRepository
-	SaveUsStockMetaDataInDB    db.SaveUsStockMetaDataRepository
+	getUsStockMetaDataPort         out.GetUsStockMetaDataPort
+	checkStockExistInCache         cache.CheckStockExistRepository
+	checkStockExistInDB            db.CheckStockExistRepository
+	saveUsStockMetaDataInCache     cache.SaveUsStockMetaDataRepository
+	SaveUsStockMetaDataInDB        db.SaveUsStockMetaDataRepository
+	getUsStockByFigiInDbRepository db.GetUsStockByFigiRepository
 }
 
-func NewUsStockSymbolService(config *config.Config,
+func NewUsStockSymbolService(
 	getUsStockMetaData out.GetUsStockMetaDataPort,
 	checkStockExistInCache cache.CheckStockExistRepository,
 	checkStockExistInDB db.CheckStockExistRepository,
 	saveUsStockMetaDataInCache cache.SaveUsStockMetaDataRepository,
-	SaveUsStockMetaDataInDB db.SaveUsStockMetaDataRepository) *usStockMetaDataService {
+	SaveUsStockMetaDataInDB db.SaveUsStockMetaDataRepository,
+	getUsStockByFigiInDbRepository db.GetUsStockByFigiRepository) *usStockMetaDataService {
 	return &usStockMetaDataService{
-		config:                     config,
-		getUsStockMetaDataPort:     getUsStockMetaData,
-		checkStockExistInCache:     checkStockExistInCache,
-		checkStockExistInDB:        checkStockExistInDB,
-		saveUsStockMetaDataInCache: saveUsStockMetaDataInCache,
-		SaveUsStockMetaDataInDB:    SaveUsStockMetaDataInDB,
+		getUsStockMetaDataPort:         getUsStockMetaData,
+		checkStockExistInCache:         checkStockExistInCache,
+		checkStockExistInDB:            checkStockExistInDB,
+		saveUsStockMetaDataInCache:     saveUsStockMetaDataInCache,
+		SaveUsStockMetaDataInDB:        SaveUsStockMetaDataInDB,
+		getUsStockByFigiInDbRepository: getUsStockByFigiInDbRepository,
 	}
 }
 
@@ -73,6 +73,10 @@ func (u *usStockMetaDataService) saveToDB(stock *entity.UsStock) bool {
 	return u.SaveUsStockMetaDataInDB.SaveUsStockMetaDataInDB(stock)
 }
 
+func (u *usStockMetaDataService) getStockInDb(figi string) (*entity.UsStock, error) {
+	return u.getUsStockByFigiInDbRepository.GetUsStockByFigi(figi)
+}
+
 func (u *usStockMetaDataService) SaveUsStockMetaData() (int, int) {
 	counterCache := 0
 	counterDB := 0
@@ -87,7 +91,11 @@ func (u *usStockMetaDataService) SaveUsStockMetaData() (int, int) {
 			continue
 		} else {
 			if u.checkExistInDB(&stock) {
-				if u.saveToCache(&stock) {
+				s, err := u.getStockInDb(stock.Figi)
+				if err != nil {
+					continue
+				}
+				if u.saveToCache(s) {
 					counterCache++
 				}
 			} else {

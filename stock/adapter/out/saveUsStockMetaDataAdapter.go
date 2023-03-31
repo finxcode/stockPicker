@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 	"stockPicker/stock/adapter/out/model"
@@ -26,7 +25,8 @@ func NewSaveUsStockMetaDataConsoleController(rds *redis.Client, db *sqlx.DB) *sa
 }
 
 func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInCache(stock *entity.UsStock) bool {
-	cmd := s.rds.Set(context.Background(), stock.Figi, stock.Symbol, time.Hour*24*30)
+	cmd := s.rds.Set(context.Background(), stock.Figi,
+		fmt.Sprintf("%s %s", stock.Symbol, stock.StockId), time.Hour*24*30)
 	if cmd.Err() != nil {
 		global.App.Logger.Error("redis error", zap.String("redis set key error",
 			fmt.Sprintf("redis set key:%s failed with error:%s", stock.Figi, cmd.Err().Error())))
@@ -36,7 +36,7 @@ func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInCache(stock 
 }
 
 func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInDB(domainStock *entity.UsStock) bool {
-	stock := model.NewUsStockDataEntity(uuid.New(), domainStock.Currency,
+	stock := model.NewUsStockDataEntity(domainStock.StockId, domainStock.Currency,
 		domainStock.Description, domainStock.DisplaySymbol,
 		domainStock.Figi, domainStock.IsIn, domainStock.Mic,
 		domainStock.ShareClassFigi, domainStock.Symbol, domainStock.Symbol2, domainStock.EquityType)
@@ -46,7 +46,7 @@ func (s *saveUsStockMetaDataConsoleController) SaveUsStockMetaDataInDB(domainSto
 	_, err := s.db.NamedExec(query, stock)
 	if err != nil {
 		global.App.Logger.Error("db insert error", zap.String("database insertion failed",
-			fmt.Sprintf("insert stock figi:%s failed with error:%s", stock.Figi, err.Error())))
+			fmt.Sprintf("insert stock figi:%s failed with error:%s", stock.GetFigi(), err.Error())))
 		return false
 	}
 	return true

@@ -22,6 +22,7 @@ func NewUsStock(currency string, description string, displaySymbol string,
 	figi string, isIn string, mic string, shareClassFigi string,
 	symbol string, symbol2 string, equityType string) *UsStock {
 	return &UsStock{
+		StockId:        uuid.New(),
 		Currency:       currency,
 		Description:    description,
 		DisplaySymbol:  displaySymbol,
