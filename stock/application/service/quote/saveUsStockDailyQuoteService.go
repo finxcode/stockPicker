@@ -55,8 +55,9 @@ func (s *saveUsStockDailyQuoteService) SaveUsStockDailyQuotes() int {
 
 		err = s.saveUsStockDailyQuoteRepository.SaveUsStockDailyQuoteToDb(quote)
 		if err != nil {
-			countStockDailyQuote++
+			continue
 		}
+		countStockDailyQuote++
 		if testCounter > 10 {
 			break
 		}

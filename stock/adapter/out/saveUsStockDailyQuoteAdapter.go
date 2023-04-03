@@ -55,7 +55,7 @@ func (s *saveUsStockDailyQuoteAdapter) SaveUsStockDailyQuoteToDb(quote *entity.S
 func (s *saveUsStockDailyQuoteAdapter) CheckUsStockDailyQuoteExistByIdAndTradingDayInDb(
 	stockId uuid.UUID, tradingDay string) bool {
 	var quoteDataEntity model.UsStockDailyQuote
-	query := "select * from us_stock_daily_quote where stockId = ? and tradingDay = ?"
+	query := "select * from us_stock_daily_quote where stock_id = ? and trading_day = ?"
 	if err := s.db.Get(&quoteDataEntity, query, stockId, tradingDay); err == sql.ErrNoRows {
 		return false
 	} else if err != nil {
