@@ -1,31 +1,74 @@
 package quote
 
 import (
+	"fmt"
+	"github.com/google/uuid"
 	"stockPicker/stock/application/port/out"
-	"stockPicker/stock/application/service/metadata"
-	"stockPicker/stock/domain/entity"
+	"stockPicker/stock/application/port/out/cache"
+	"stockPicker/stock/application/port/out/db"
+	"stockPicker/stock/init/config"
+	"strings"
 )
 
 type saveUsStockDailyQuoteService struct {
-	getUsStockMetaDataPort   out.GetUsStockMetaDataPort
-	getUsStockDailyQuotePort out.GetUsStockDailyQuotePort
+	config                          *config.Config
+	getUsStockDailyQuotePort        out.GetUsStockDailyQuotePort
+	getAllUsStockFigi               cache.GetAllUsStockFigiRepository
+	getUsStocksByFigi               cache.GetUsStocksByFigiRepository
+	saveUsStockDailyQuoteRepository db.SaveUsStockDailyQuoteRepository
 }
 
-func NewSaveUsStockDailyQuoteService(getUsStockMetaDataPort out.GetUsStockMetaDataPort,
-	getUsStockDailyQuotePort out.GetUsStockDailyQuotePort) *saveUsStockDailyQuoteService {
+func NewSaveUsStockDailyQuoteService(
+	config *config.Config,
+	getUsStockDailyQuotePort out.GetUsStockDailyQuotePort,
+	getAllUsStockFigi cache.GetAllUsStockFigiRepository,
+	getUsStocksByFigi cache.GetUsStocksByFigiRepository,
+	saveUsStockDailyQuoteRepository db.SaveUsStockDailyQuoteRepository) *saveUsStockDailyQuoteService {
 	return &saveUsStockDailyQuoteService{
-		getUsStockMetaDataPort:   getUsStockMetaDataPort,
-		getUsStockDailyQuotePort: getUsStockDailyQuotePort,
+		config:                          config,
+		getUsStockDailyQuotePort:        getUsStockDailyQuotePort,
+		getAllUsStockFigi:               getAllUsStockFigi,
+		getUsStocksByFigi:               getUsStocksByFigi,
+		saveUsStockDailyQuoteRepository: saveUsStockDailyQuoteRepository,
 	}
 }
 
-func (s *saveUsStockDailyQuoteService) getUsStockMetaData() *[]entity.UsStock {
-	var usCommonStock []entity.UsStock
-	stocks := s.getUsStockMetaDataPort.GetUsStockMetaData()
-	for _, stock := range *stocks {
-		if (stock.Mic == metadata.XNYS || stock.Mic == metadata.XNAS || stock.Mic == metadata.XASE) && stock.EquityType == metadata.Type {
-			usCommonStock = append(usCommonStock, stock)
+func (s *saveUsStockDailyQuoteService) SaveUsStockDailyQuotes() int {
+	countStockDailyQuote := 0
+	testCounter := 0
+	figis := s.getAllUsStockFigi.GetAllUsStockFigi()
+	if figis == nil {
+		return 0
+	}
+	for _, figi := range *figis {
+		testCounter++
+		res := s.getUsStocksByFigi.GetUsStockSymbolByFigi(figi)
+		if res == "" {
+			continue
+		}
+		quote, err := s.getUsStockDailyQuotePort.GetUsStockDailyQuote(urlQuoteBuilder(
+			s.config.Xueqiu.BaseUrl, getSymbolAndStockId(res)[0]))
+		if err != nil {
+			continue
+		}
+		quote.SetStockId(uuid.MustParse(getSymbolAndStockId(res)[1]))
+
+		err = s.saveUsStockDailyQuoteRepository.SaveUsStockDailyQuoteToDb(quote)
+		if err != nil {
+			countStockDailyQuote++
+		}
+		if testCounter > 10 {
+			break
 		}
 	}
-	return &usCommonStock
+
+	return countStockDailyQuote
+}
+
+func urlQuoteBuilder(url, symbol string) string {
+	return fmt.Sprintf("%s/%s", url, symbol)
+}
+
+func getSymbolAndStockId(res string) []string {
+	return strings.Split(res, " ")
 }

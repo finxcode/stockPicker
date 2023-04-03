@@ -5,9 +5,11 @@ import (
 	"go.uber.org/zap"
 	"log"
 	"stockPicker/ext/finnhub/fetcher"
+	"stockPicker/ext/xueqiu/parser"
 	"stockPicker/stock/adapter/in"
 	"stockPicker/stock/adapter/out"
 	"stockPicker/stock/application/service/metadata"
+	"stockPicker/stock/application/service/quote"
 	"stockPicker/stock/global"
 	"stockPicker/stock/init/config"
 	logging "stockPicker/stock/init/log"
@@ -58,4 +60,14 @@ func main() {
 	saveUsStockConsoleController := in.NewSaveUsStockConsoleController(usStockMetaDataService)
 
 	_ = saveUsStockConsoleController.SaveUsStockMetaData()
+
+	stockQuoteParser := parser.NewStockPriceParser()
+	getUsStockDailyQuoteAdapter := out.NewGetUsStockDailyQuoteAdapter(stockQuoteParser)
+	getUsStockAdapter := out.NewGetUsStocksAdapter(rds, db)
+	saveUsStockDailyQuoteAdapter := out.NewSaveUsStockDailyQuoteAdapter(db)
+	saveUsStockDailyQuoteService := quote.NewSaveUsStockDailyQuoteService(c, getUsStockDailyQuoteAdapter,
+		getUsStockAdapter, getUsStockAdapter, saveUsStockDailyQuoteAdapter)
+	saveUsStockDailyQuoteController := in.NewSaveUsStockDailyQuoteController(saveUsStockDailyQuoteService)
+	saveUsStockDailyQuoteController.SaveUsStockDailyQuote()
+
 }

@@ -1,6 +1,7 @@
 package out
 
 import (
+	"context"
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
@@ -34,4 +35,29 @@ func (g *getUsStockAdapter) GetUsStockByFigi(figi string) (*entity.UsStock, erro
 		return nil, err
 	}
 	return stock.StockDataEntityToDomainEntity(), nil
+}
+
+func (g *getUsStockAdapter) GetAllUsStockFigi() *[]string {
+	var cursor uint64
+	keys, cursor, err := g.rds.Scan(context.Background(), cursor, "*", 0).Result()
+	if err != nil {
+		global.App.Logger.Error("redis error", zap.String("redis error getting all keys", err.Error()))
+		return nil
+	}
+	if cursor == 0 {
+		global.App.Logger.Info("redis no key found", zap.String("redis no key found", "no key found"))
+		return nil
+	}
+
+	return &keys
+}
+
+func (g *getUsStockAdapter) GetUsStockSymbolByFigi(figi string) string {
+	res, err := g.rds.Get(context.Background(), figi).Result()
+	if err != nil {
+		global.App.Logger.Error("redis error", zap.String("redis error when getting key",
+			fmt.Sprintf("failed to get key: %s with error：%s", figi, err.Error())))
+		return ""
+	}
+	return res
 }

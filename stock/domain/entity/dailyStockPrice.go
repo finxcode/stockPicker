@@ -52,3 +52,7 @@ func NewStockDailyQuote(symbol string, current float32, lastClose float32,
 		CurrentYearPercent: currentYearPercent, IssueDate: issueDate, PeTtm: peTtm, PeLyr: peLyr, PeForecast: peForecast,
 		Navps: navps, Pb: pb, Psr: psr, Timestamp: timestamp, TradingDay: tradingDay}
 }
+
+func (s *StockDailyQuote) SetStockId(stockId uuid.UUID) {
+	s.StockId = stockId
+}

@@ -12,6 +12,7 @@ type Config struct {
 	AlphaVantage `mapstructure:"alphaVantage" json:"alphaVantage" yaml:"alphaVantage"`
 	Log          `mapstructure:"log" json:"log" yaml:"log"`
 	Redis        `mapstructure:"redis" json:"redis" yaml:"redis"`
+	Xueqiu       `mapstructure:"xueqiu" json:"xueqiu" yaml:"xueqiu"`
 }
 
 func New() (error, *Config) {
