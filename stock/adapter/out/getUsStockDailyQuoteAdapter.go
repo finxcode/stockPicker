@@ -45,7 +45,7 @@ func (g *getUsStockDailyQuoteAdapter) GetUsStockDailyQuote(url, symbol string) (
 		return nil, err
 	}
 
-	quoteDataEntity.SetTradingDay(int64(quoteDataEntity.Timestamp))
+	quoteDataEntity.SetTradingDay(int64(quoteDataEntity.FetchTime))
 	quoteDataEntity.SetSymbol(symbol)
 
 	return mapper.MapQuoteDataEntityToQuoteDomainEntity(&quoteDataEntity), nil
