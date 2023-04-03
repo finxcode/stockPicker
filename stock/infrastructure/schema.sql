@@ -53,7 +53,7 @@ CREATE TABLE us_stock_daily_quote (
     navps float,
     pb float,
     psr float,
-    timestamp bigint unsigned,
+    fetch_time bigint unsigned,
     trading_day varchar(20),
     created_at timestamp,
     updated_at timestamp null,

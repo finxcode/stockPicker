@@ -35,11 +35,11 @@ func (s *saveUsStockDailyQuoteAdapter) SaveUsStockDailyQuoteToDb(quote *entity.S
 		query := "INSERT INTO us_stock_daily_quote (stock_id, symbol, current, last_close, high, low, open, chg," +
 			"percent, high52w, low52w, volume, amount, market_capital, total_shares, dividend, dividend_yield, " +
 			"eps, turnover_rate, volume_ratio, amplitude, current_year_percent, issue_date, pe_ttm, pe_lyr," +
-			"pe_forecast, navps, pb,psr,timestamp, trading_day, created_at)" +
+			"pe_forecast, navps, pb,psr,fetch_time, trading_day, created_at)" +
 			"VALUES (:stock_id, :symbol, :current, :last_close, :high, :low, :open, :chg" +
 			":percent, :high52w, :low52w, :volume, :amount, :market_capital, :total_shares, :dividend, :dividend_yield, " +
 			":eps, :turnover_rate, :volume_ratio, :amplitude, :current_year_percent, :issue_date, :pe_ttm, :pe_lyr," +
-			":pe_forecast, :navps, :pb, :psr, :timestamp, :trading_day, :created_at)"
+			":pe_forecast, :navps, :pb, :psr, :fetch_time, :trading_day, :created_at)"
 		fmt.Println(quoteDataEntity)
 		_, err := s.db.NamedExec(query, quoteDataEntity)
 		if err != nil {

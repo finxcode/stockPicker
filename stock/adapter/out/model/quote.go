@@ -36,7 +36,7 @@ type UsStockDailyQuote struct {
 	Navps              float32   `json:"navps" mapstructure:"navps" db:"navps"`                                              //navps
 	Pb                 float32   `json:"pb" mapstructure:"pb" db:"pb"`                                                       //pb
 	Psr                float32   `json:"psr" mapstructure:"psr" db:"psr"`                                                    //psr
-	Timestamp          int       `json:"timestamp" mapstructure:"timestamp" db:"timestamp"`                                  //timestamp
+	FetchTime          int       `json:"timestamp" mapstructure:"timestamp" db:"fetch_time"`                                 //timestamp
 	TradingDay         string    `json:"trading_day" db:"trading_day"`
 	CreatedAt          time.Time `json:"createdAt" db:"created_at"`
 	UpdatedAt          time.Time `json:"updatedAt" db:"updated_at"`
@@ -54,7 +54,7 @@ func NewStockDailyQuote(symbol string, current float32, lastClose float32,
 		Volume: volume, Amount: amount, MarketCapital: marketCapital, TotalShares: totalShares, Dividend: dividend,
 		DividendYield: dividendYield, EPS: EPS, TurnoverRate: turnoverRate, VolumeRatio: volumeRatio, Amplitude: amplitude,
 		CurrentYearPercent: currentYearPercent, IssueDate: issueDate, PeTtm: peTtm, PeLyr: peLyr, PeForecast: peForecast,
-		Navps: navps, Pb: pb, Psr: psr, Timestamp: timestamp, TradingDay: tradingDay, CreatedAt: time.Now()}
+		Navps: navps, Pb: pb, Psr: psr, FetchTime: timestamp, TradingDay: tradingDay, CreatedAt: time.Now()}
 }
 
 func (s *UsStockDailyQuote) SetTradingDay(timestamp int64) {
