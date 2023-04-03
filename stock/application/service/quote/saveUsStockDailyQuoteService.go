@@ -8,6 +8,7 @@ import (
 	"stockPicker/stock/application/port/out/db"
 	"stockPicker/stock/init/config"
 	"strings"
+	"time"
 )
 
 type saveUsStockDailyQuoteService struct {
@@ -59,9 +60,10 @@ func (s *saveUsStockDailyQuoteService) SaveUsStockDailyQuotes() int {
 			continue
 		}
 		countStockDailyQuote++
-		if testCounter > 10 {
+		if testCounter > 5 {
 			break
 		}
+		time.Sleep(time.Second * 3)
 	}
 
 	return countStockDailyQuote
