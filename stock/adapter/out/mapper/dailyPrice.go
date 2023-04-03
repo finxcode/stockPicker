@@ -13,5 +13,5 @@ func MapQuoteDataEntityToQuoteDomainEntity(quoteDataEntity *model.UsStockDailyQu
 		quoteDataEntity.Dividend, quoteDataEntity.DividendYield, quoteDataEntity.EPS, quoteDataEntity.TurnoverRate, quoteDataEntity.TurnoverRate,
 		quoteDataEntity.Amplitude, quoteDataEntity.CurrentYearPercent, quoteDataEntity.IssueDate, quoteDataEntity.PeTtm,
 		quoteDataEntity.PeLyr, quoteDataEntity.PeForecast, quoteDataEntity.Navps, quoteDataEntity.Pb, quoteDataEntity.Psr,
-		quoteDataEntity.Timestamp, quoteDataEntity.TradingDay)
+		quoteDataEntity.FetchTime, quoteDataEntity.TradingDay)
 }
