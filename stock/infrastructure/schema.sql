@@ -23,7 +23,7 @@ CREATE TABLE us_stock_meta_data (
 
 DROP TABLE IF EXISTS us_stock_daily_quote;
 CREATE TABLE us_stock_daily_quote (
-    ID bigint unsigned not null auto_increment,
+    id bigint unsigned not null auto_increment,
     stock_id varchar(50) not null,
     symbol         varchar(10) not null,
     current float,
