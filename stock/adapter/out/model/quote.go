@@ -66,3 +66,7 @@ func (s *UsStockDailyQuote) SetTradingDay(timestamp int64) {
 func (s *UsStockDailyQuote) SetStockId(stockId uuid.UUID) {
 	s.StockId = stockId
 }
+
+func (s *UsStockDailyQuote) SetSymbol(symbol string) {
+	s.Symbol = symbol
+}

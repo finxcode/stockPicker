@@ -47,7 +47,7 @@ func (s *saveUsStockDailyQuoteService) SaveUsStockDailyQuotes() int {
 			continue
 		}
 		quote, err := s.getUsStockDailyQuotePort.GetUsStockDailyQuote(urlQuoteBuilder(
-			s.config.Xueqiu.BaseUrl, getSymbolAndStockId(res)[0]))
+			s.config.Xueqiu.BaseUrl, getSymbolAndStockId(res)[0]), getSymbolAndStockId(res)[0])
 		fmt.Println(quote)
 		if err != nil {
 			continue

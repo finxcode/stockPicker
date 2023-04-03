@@ -21,7 +21,7 @@ func NewGetUsStockDailyQuoteAdapter(stockQuoteParser *parser.StockQuoteParser) *
 	}
 }
 
-func (g *getUsStockDailyQuoteAdapter) GetUsStockDailyQuote(url string) (*entity.StockDailyQuote, error) {
+func (g *getUsStockDailyQuoteAdapter) GetUsStockDailyQuote(url, symbol string) (*entity.StockDailyQuote, error) {
 	quotes, err := g.stockQuoteParser.ParseStockData(url)
 	if err != nil {
 		global.App.Logger.Error("parse stock data error", zap.String("parse stock data failed",
@@ -46,6 +46,7 @@ func (g *getUsStockDailyQuoteAdapter) GetUsStockDailyQuote(url string) (*entity.
 	}
 
 	quoteDataEntity.SetTradingDay(int64(quoteDataEntity.Timestamp))
+	quoteDataEntity.SetSymbol(symbol)
 
 	return mapper.MapQuoteDataEntityToQuoteDomainEntity(&quoteDataEntity), nil
 }
