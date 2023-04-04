@@ -36,20 +36,17 @@ func NewSaveUsStockDailyQuoteService(
 
 func (s *saveUsStockDailyQuoteService) SaveUsStockDailyQuotes() int {
 	countStockDailyQuote := 0
-	testCounter := 0
 	figis := s.getAllUsStockFigi.GetAllUsStockFigi()
 	if figis == nil {
 		return 0
 	}
 	for _, figi := range *figis {
-		testCounter++
 		res := s.getUsStocksByFigi.GetUsStockSymbolByFigi(figi)
 		if res == "" {
 			continue
 		}
 		quote, err := s.getUsStockDailyQuotePort.GetUsStockDailyQuote(urlQuoteBuilder(
 			s.config.Xueqiu.BaseUrl, getSymbolAndStockId(res)[0]), getSymbolAndStockId(res)[0])
-		fmt.Println(quote)
 		if err != nil {
 			continue
 		}
@@ -60,9 +57,7 @@ func (s *saveUsStockDailyQuoteService) SaveUsStockDailyQuotes() int {
 			continue
 		}
 		countStockDailyQuote++
-		if testCounter > 5 {
-			break
-		}
+
 		time.Sleep(time.Second * 3)
 	}
 

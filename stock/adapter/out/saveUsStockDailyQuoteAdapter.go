@@ -30,6 +30,9 @@ func (s *saveUsStockDailyQuoteAdapter) SaveUsStockDailyQuoteToDb(quote *entity.S
 		quote.PeForecast, quote.Navps, quote.Pb, quote.Psr, quote.Timestamp, quote.TradingDay)
 	quoteDataEntity.SetStockId(quote.StockId)
 	if s.CheckUsStockDailyQuoteExistByIdAndTradingDayInDb(quoteDataEntity.StockId, quoteDataEntity.TradingDay) {
+		global.App.Logger.Info("stock quote already exists", zap.String("record exist",
+			fmt.Sprintf("quote stock_id: %s symbol:%s on trading_day:%s already exist",
+				quoteDataEntity.StockId, quoteDataEntity.Symbol, quoteDataEntity.TradingDay)))
 		return errors.New("quote already exist or error occurred in db operation")
 	} else {
 		query := "INSERT INTO us_stock_daily_quote (stock_id, symbol, current, last_close, high, low, open, chg," +
@@ -40,7 +43,7 @@ func (s *saveUsStockDailyQuoteAdapter) SaveUsStockDailyQuoteToDb(quote *entity.S
 			":percent, :high52w, :low52w, :volume, :amount, :market_capital, :total_shares, :dividend, :dividend_yield, " +
 			":eps, :turnover_rate, :volume_ratio, :amplitude, :current_year_percent, :issue_date, :pe_ttm, :pe_lyr," +
 			":pe_forecast, :navps, :pb, :psr, :fetch_time, :trading_day, :created_at)"
-		fmt.Println(quoteDataEntity)
+
 		_, err := s.db.NamedExec(query, quoteDataEntity)
 		if err != nil {
 			global.App.Logger.Error("db error", zap.String("us_stock_daily_quote db insertion error",
@@ -48,9 +51,14 @@ func (s *saveUsStockDailyQuoteAdapter) SaveUsStockDailyQuoteToDb(quote *entity.S
 					quoteDataEntity.StockId, quoteDataEntity.Symbol, quoteDataEntity.TradingDay, err.Error())))
 			return err
 		}
+
+		global.App.Logger.Info("stock daily quote saved", zap.String("one quote saved",
+			fmt.Sprintf("quote stock_id: %s symbol:%s on trading_day:%s saved sucessfully",
+				quoteDataEntity.StockId, quoteDataEntity.Symbol, quoteDataEntity.TradingDay)))
+
 		return nil
 	}
-	return nil
+
 }
 
 func (s *saveUsStockDailyQuoteAdapter) CheckUsStockDailyQuoteExistByIdAndTradingDayInDb(
