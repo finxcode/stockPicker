@@ -27,7 +27,7 @@ func NewGetUsStocksAdapter(rds *redis.Client, db *sqlx.DB) *getUsStockAdapter {
 //get stock in db
 func (g *getUsStockAdapter) GetUsStockByFigi(figi string) (*entity.UsStock, error) {
 	var stock model.UsStock
-	query := "SELECT * from us_stock_meta_data where figi = $1"
+	query := "SELECT * from us_stock_meta_data where figi = ?"
 	err := g.db.Get(&stock, query, figi)
 	if err != nil {
 		global.App.Logger.Error("database error", zap.String("query us_stock_meta_data error",
