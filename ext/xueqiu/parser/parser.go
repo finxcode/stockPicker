@@ -141,7 +141,10 @@ func (p *StockQuoteParser) ParseStockData(url string) (map[string]interface{}, e
 	startIndex := strings.Index(*html, "quote: {")
 	endIndex := strings.Index(*html, "quoteTags: [{")
 	if startIndex >= endIndex {
-		return make(map[string]interface{}), errors.New("could not find target text in html body")
+		endIndex = strings.Index(*html, "quoteTags: [")
+		if startIndex >= endIndex {
+			return make(map[string]interface{}), errors.New("could not find target text in html body")
+		}
 	}
 
 	text := (*html)[startIndex:endIndex]
