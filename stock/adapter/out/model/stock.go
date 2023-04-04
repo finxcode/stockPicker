@@ -1,26 +1,27 @@
 package model
 
 import (
+	"database/sql"
 	"github.com/google/uuid"
 	"stockPicker/stock/domain/entity"
 	"time"
 )
 
 type UsStock struct {
-	StockId        uuid.UUID `db:"stock_id"`
-	Currency       string    `db:"currency"`
-	Description    string    `db:"description"`
-	DisplaySymbol  string    `db:"display_symbol"`
-	Figi           string    `db:"figi"`
-	IsIn           string    `db:"is_in"`
-	Mic            string    `db:"mic"`
-	ShareClassFigi string    `db:"share_class_figi"`
-	Symbol         string    `db:"symbol"`
-	Symbol2        string    `db:"symbol2"`
-	EquityType     string    `db:"equity_type"`
-	CreatedAt      time.Time `db:"created_at"`
-	UpdatedAt      time.Time `db:"updated_at"`
-	DeletedAt      time.Time `db:"deleted_at"`
+	StockId        uuid.UUID    `db:"stock_id"`
+	Currency       string       `db:"currency"`
+	Description    string       `db:"description"`
+	DisplaySymbol  string       `db:"display_symbol"`
+	Figi           string       `db:"figi"`
+	IsIn           string       `db:"is_in"`
+	Mic            string       `db:"mic"`
+	ShareClassFigi string       `db:"share_class_figi"`
+	Symbol         string       `db:"symbol"`
+	Symbol2        string       `db:"symbol2"`
+	EquityType     string       `db:"equity_type"`
+	CreatedAt      time.Time    `db:"created_at"`
+	UpdatedAt      sql.NullTime `db:"updated_at"`
+	DeletedAt      sql.NullTime `db:"deleted_at"`
 }
 
 func NewUsStockDataEntity(stockId uuid.UUID, currency string, description string,
