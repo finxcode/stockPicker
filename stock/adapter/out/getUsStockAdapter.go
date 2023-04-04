@@ -39,14 +39,24 @@ func (g *getUsStockAdapter) GetUsStockByFigi(figi string) (*entity.UsStock, erro
 
 func (g *getUsStockAdapter) GetAllUsStockFigi() *[]string {
 	var cursor uint64
-	keys, cursor, err := g.rds.Scan(context.Background(), cursor, "*", 0).Result()
-	if err != nil {
-		global.App.Logger.Error("redis error", zap.String("redis error getting all keys", err.Error()))
-		return nil
-	}
-	if cursor == 0 {
-		global.App.Logger.Info("redis no key found", zap.String("redis no key found", "no key found"))
-		return nil
+	var keys []string
+	for {
+		var keyPartial []string
+		var err error
+		keyPartial, cursor, err = g.rds.Scan(context.Background(), cursor, "*", 0).Result()
+		if err != nil {
+			global.App.Logger.Error("redis error", zap.String("redis error getting all keys", err.Error()))
+			return nil
+		}
+
+		for _, key := range keyPartial {
+			keys = append(keys, key)
+		}
+		if cursor == 0 {
+			break
+			//global.App.Logger.Info("redis no key found", zap.String("redis no key found", "no key found"))
+			//return nil
+		}
 	}
 
 	return &keys

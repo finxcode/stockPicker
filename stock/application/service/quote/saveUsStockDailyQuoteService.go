@@ -48,6 +48,7 @@ func (s *saveUsStockDailyQuoteService) SaveUsStockDailyQuotes() int {
 		quote, err := s.getUsStockDailyQuotePort.GetUsStockDailyQuote(urlQuoteBuilder(
 			s.config.Xueqiu.BaseUrl, getSymbolAndStockId(res)[0]), getSymbolAndStockId(res)[0])
 		if err != nil {
+			time.Sleep(time.Second * 3)
 			continue
 		}
 		quote.SetStockId(uuid.MustParse(getSymbolAndStockId(res)[1]))
