@@ -36,7 +36,7 @@ func (s *saveUsStockDailyQuoteAdapter) SaveUsStockDailyQuoteToDb(quote *entity.S
 			"percent, high52w, low52w, volume, amount, market_capital, total_shares, dividend, dividend_yield, " +
 			"eps, turnover_rate, volume_ratio, amplitude, current_year_percent, issue_date, pe_ttm, pe_lyr," +
 			"pe_forecast, navps, pb,psr,fetch_time, trading_day, created_at)" +
-			"VALUES (:stock_id, :symbol, :current, :last_close, :high, :low, :open, :chg" +
+			"VALUES (:stock_id, :symbol, :current, :last_close, :high, :low, :open, :chg," +
 			":percent, :high52w, :low52w, :volume, :amount, :market_capital, :total_shares, :dividend, :dividend_yield, " +
 			":eps, :turnover_rate, :volume_ratio, :amplitude, :current_year_percent, :issue_date, :pe_ttm, :pe_lyr," +
 			":pe_forecast, :navps, :pb, :psr, :fetch_time, :trading_day, :created_at)"
